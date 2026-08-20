@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="theme-color" content="#0F172A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Clientes DyL" />
+  <title>Clientes DyL · Prospectos 3D</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#0F172A',
+            accent: '#0EA5E9',
+            accent2: '#38BDF8'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Clientes DyL&quot;,&quot;short_name&quot;:&quot;Clientes DyL&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#0F172A&quot;,&quot;theme_color&quot;:&quot;#0F172A&quot;}" />
+  <style>
+    :root { color-scheme: dark; }
+    html, body { background: #0B1220; }
+    body { padding-bottom: env(safe-area-inset-bottom); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .card { background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(15,23,42,.78)); border: 1px solid rgba(56,189,248,.12); }
+    .chip { border: 1px solid rgba(56,189,248,.22); }
+    textarea, input, select { background: #0B1220; }
+    .fab-safe { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+    @media print {
+      nav, header, .no-print { display: none !important; }
+      body { background: #fff; color: #111; }
+      #printArea { display: block !important; color: #111; }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 font-sans">
+  <header class="sticky top-0 z-40 border-b border-sky-500/10 bg-[#0B1220]/90 backdrop-blur-xl">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div>
+        <p class="font-display text-lg tracking-tight"><span class="font-bold">DyL</span> <span class="text-sky-400">Clientes</span></p>
+        <p class="text-[11px] text-slate-400">Prospectos · propuestas · seguimiento</p>
+      </div>
+      <button onclick="showTab('config')" class="text-xs px-3 py-1.5 rounded-full chip text-sky-300">Ajustes</button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 pt-4 pb-28">
+    <!-- BUSCAR -->
+    <section id="tab-buscar">
+      <div class="card rounded-2xl p-4 mb-4">
+        <h2 class="font-display text-xl mb-1">Buscar clientes</h2>
+        <p class="text-sm text-slate-400 mb-4">Elegí zona, localidad y rubro. Se abren búsquedas reales en Google Maps y Google. Después cargás el contacto acá y generás la propuesta.</p>
+
+        <label class="text-xs text-slate-400">Zona</label>
+        <select id="zona" onchange="fillLocalidades()" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
+
+        <label class="text-xs text-slate-400">Localidad</label>
+        <select id="localidad" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
+
+        <label class="text-xs text-slate-400">O escribí otra localidad</label>
+        <input id="localidadCustom" placeholder="Ej: Castelar, San Justo, Palermo…" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm" />
+
+        <label class="text-xs text-slate-400">Rubro</label>
+        <select id="rubro" class="w-full mt-1 mb-4 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="openSearch('maps')" class="rounded-xl bg-sky-500 text-ink font-semibold py-3 text-sm">Abrir Maps</button>
+          <button onclick="openSearch('google')" class="rounded-xl bg-slate-800 border border-sky-500/20 py-3 text-sm">Buscar en Google</button>
+        </div>
+        <button onclick="openSearch('both')" class="w-full mt-2 rounded-xl border border-sky-400/30 text-sky-300 py-2.5 text-sm">Abrir Maps + Google</button>
+      </div>
+
+      <div class="card rounded-2xl p-4 mb-4">
+        <h3 class="font-display mb-2">Cómo prospectar (rápido)</h3>
+        <ol class="text-sm text-slate-300 space-y-2 list-decimal pl-5">
+          <li>Abrí Maps y filtrá negocios con teléfono o WhatsApp.</li>
+          <li>Entrá al perfil: copiá nombre, teléfono, web e Instagram.</li>
+          <li>Volvé acá → <b>Agregar cliente</b> y pegá los datos.</li>
+          <li>Generá la propuesta y mandala por WhatsApp en un toque.</li>
+        </ol>
+        <p class="text-xs text-slate-500 mt-3">Tip: priorizá estudios chicos/medianos de arquitectura, metalúrgicas, constructoras y diseñadores. Ahí la impresión 3D resuelve maquetas, jigs, prototipos y repuestos sin importar.</p>
+      </div>
+
+      <div class="card rounded-2xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-display">Sugeridos Zona Oeste</h3>
+          <span class="text-[11px] text-slate-500">verificar datos</span>
+        </div>
+        <div id="sugeridos" class="space-y-2"></div>
+      </div>
+    </section>
+
+    <!-- CARTERA -->
+    <section id="tab-cartera" class="hidden">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="font-display text-xl">Cartera</h2>
+          <p id="carteraCount" class="text-xs text-slate-400"></p>
+        </div>
+        <button onclick="openClientModal()" class="rounded-full bg-sky-500 text-ink text-sm font-semibold px-4 py-2">+ Cliente</button>
+      </div>
+      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-3">
+        <button onclick="setFilter('todos')" data-f="todos" class="filt chip whitespace-nowrap rounded-full px-3 py-1.5 text-xs">Todos</button>
+        <button onclick="setFilter('prospecto')" data-f="prospecto" class="filt chip whitespace-nowrap rounded-full px-3 py-1.5 text-xs">Prospecto</button>
+        <button onclick="setFilter('contactado')" data-f="contactado" class="filt chip whitespace-nowrap rounded-full px-3 py-1.5 text-xs">Contactado</button>
+        <button onclick="setFilter('propuesta')" data-f="propuesta" class="filt chip whitespace-nowrap rounded-full px-3 py-1.5 text-xs">Propuesta</button>
+        <button onclick="setFilter('cliente')" data-f="cliente" class="filt chip whitespace-nowrap rounded-full px-3 py-1.5 text-xs">Cliente</button>
+      </div>
+      <input id="q" oninput="renderCartera()" placeholder="Filtrar por nombre, rubro, localidad…" class="w-full mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm" />
+      <div id="carteraList" class="space-y-3"></div>
+    </section>
+
+    <!-- PROPUESTA -->
+    <section id="tab-propuesta" class="hidden">
+      <div class="card rounded-2xl p-4 mb-4">
+        <h2 class="font-display text-xl mb-1">Propuesta en 1 clic</h2>
+        <p class="text-sm text-slate-400 mb-4">Elegí un cliente de la cartera o completá a mano. El texto se arma según el rubro.</p>
+        <label class="text-xs text-slate-400">Cliente</label>
+        <select id="propClient" onchange="fillFromClient()" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-xs text-slate-400">Nombre</label>
+            <input id="propNombre" class="w-full mt-1 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="text-xs text-slate-400">Rubro</label>
+            <select id="propRubro" onchange="buildProposal()" class="w-full mt-1 rounded-xl border border-sky-500/20 px-3 py-2 text-sm"></select>
+          </div>
+        </div>
+        <label class="text-xs text-slate-400 mt-3 block">WhatsApp del cliente (solo números)</label>
+        <input id="propPhone" inputmode="tel" placeholder="54911…" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+        <label class="text-xs text-slate-400">Mensaje</label>
+        <textarea id="propMsg" rows="12" class="w-full mt-1 rounded-xl border border-sky-500/20 px-3 py-2 text-sm leading-relaxed"></textarea>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <button onclick="copyMsg()" class="rounded-xl bg-slate-800 border border-sky-500/20 py-3 text-sm">Copiar</button>
+          <button onclick="sendWA()" class="rounded-xl bg-emerald-500 text-ink font-semibold py-3 text-sm">Enviar WhatsApp</button>
+        </div>
+        <button onclick="printProposal()" class="w-full mt-2 rounded-xl border border-sky-400/30 text-sky-300 py-2.5 text-sm">Ver / imprimir propuesta formal</button>
+      </div>
+    </section>
+
+    <!-- CONFIG -->
+    <section id="tab-config" class="hidden">
+      <div class="card rounded-2xl p-4 mb-4">
+        <h2 class="font-display text-xl mb-3">Datos de DyL</h2>
+        <label class="text-xs text-slate-400">Nombre comercial</label>
+        <input id="cfgName" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+        <label class="text-xs text-slate-400">WhatsApp (con 54)</label>
+        <input id="cfgWA" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+        <label class="text-xs text-slate-400">Instagram</label>
+        <input id="cfgIG" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+        <label class="text-xs text-slate-400">Email</label>
+        <input id="cfgMail" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+        <label class="text-xs text-slate-400">Zona / pie de propuesta</label>
+        <input id="cfgZona" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+        <button onclick="saveCfg()" class="w-full rounded-xl bg-sky-500 text-ink font-semibold py-3 text-sm">Guardar</button>
+      </div>
+      <div class="card rounded-2xl p-4">
+        <h3 class="font-display mb-2">Respaldo</h3>
+        <p class="text-sm text-slate-400 mb-3">Los clientes se guardan en este iPhone. Exportá un JSON para no perderlos.</p>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="exportData()" class="rounded-xl bg-slate-800 border border-sky-500/20 py-3 text-sm">Exportar</button>
+          <label class="rounded-xl bg-slate-800 border border-sky-500/20 py-3 text-sm text-center cursor-pointer">
+            Importar
+            <input type="file" accept="application/json" class="hidden" onchange="importData(event)" />
+          </label>
+        </div>
+        <button onclick="if(confirm('¿Borrar toda la cartera?')){localStorage.removeItem('dyl_clients'); renderAll();}" class="w-full mt-2 text-rose-400 text-sm py-2">Vaciar cartera</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-sky-500/10 bg-[#0B1220]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
+    <div class="max-w-3xl mx-auto grid grid-cols-3 text-center text-[11px]">
+      <button onclick="showTab('buscar')" class="navbtn py-3 text-sky-300" data-t="buscar">Buscar</button>
+      <button onclick="showTab('cartera')" class="navbtn py-3 text-slate-400" data-t="cartera">Cartera</button>
+      <button onclick="showTab('propuesta')" class="navbtn py-3 text-slate-400" data-t="propuesta">Propuesta</button>
+    </div>
+  </nav>
+
+  <!-- MODAL CLIENTE -->
+  <div id="modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="max-w-md mx-auto mt-8 card rounded-2xl p-4">
+      <div class="flex justify-between items-center mb-3">
+        <h3 id="modalTitle" class="font-display text-lg">Nuevo cliente</h3>
+        <button onclick="closeModal()" class="text-slate-400">Cerrar</button>
+      </div>
+      <input type="hidden" id="cId" />
+      <label class="text-xs text-slate-400">Nombre / empresa *</label>
+      <input id="cName" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+      <label class="text-xs text-slate-400">Rubro</label>
+      <select id="cRubro" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm"></select>
+      <label class="text-xs text-slate-400">Localidad</label>
+      <input id="cLoc" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+      <label class="text-xs text-slate-400">Teléfono / WhatsApp</label>
+      <input id="cPhone" inputmode="tel" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+      <label class="text-xs text-slate-400">Email</label>
+      <input id="cEmail" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+      <label class="text-xs text-slate-400">Web / Instagram</label>
+      <input id="cWeb" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+      <label class="text-xs text-slate-400">Dirección</label>
+      <input id="cDir" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
+      <label class="text-xs text-slate-400">Estado</label>
+      <select id="cStatus" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm">
+        <option value="prospecto">Prospecto</option>
+        <option value="contactado">Contactado</option>
+        <option value="propuesta">Propuesta enviada</option>
+        <option value="cliente">Cliente</option>
+        <option value="descartado">Descartado</option>
+      </select>
+      <label class="text-xs text-slate-400">Notas</label>
+      <textarea id="cNotes" rows="3" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm"></textarea>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="saveClient()" class="rounded-xl bg-sky-500 text-ink font-semibold py-3 text-sm">Guardar</button>
+        <button onclick="deleteClient()" class="rounded-xl border border-rose-500/40 text-rose-300 py-3 text-sm">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="printArea" class="hidden p-8 bg-white text-slate-900"></div>
+
+  <script>
+    const ZONAS = {
+      'Zona Oeste': ['Merlo','Libertad','San Antonio de Padua','Parque San Martín','Pontevedra','Mariano Acosta','Moreno','Paso del Rey','Ituzaingó','Castelar','Morón','Haedo','Ramos Mejía','San Justo','La Matanza','Marcos Paz','General Rodríguez','Hurlingham'],
+      'CABA': ['Palermo','Belgrano','Villa Crespo','Caballito','Núñez','Colegiales','Almagro','Barracas','Puerto Madero','Microcentro'],
+      'Zona Norte': ['Vicente López','Olivos','San Isidro','Martínez','Tigre','Pilar','San Fernando','Don Torcuato'],
+      'Zona Sur': ['Avellaneda','Lanús','Lomas de Zamora','Quilmes','Banfield','Temperley']
+    };
+
+    const RUBROS = [
+      { id: 'arquitectura', label: 'Estudios de arquitectura', q: 'estudio de arquitectura' },
+      { id: 'construccion', label: 'Constructoras / MMO', q: 'constructora' },
+      { id: 'diseno', label: 'Diseño industrial', q: 'diseñador industrial' },
+      { id: 'metalurgica', label: 'Metalúrgicas / talleres', q: 'metalúrgica taller mecanizado' },
+      { id: 'ingenieria', label: 'Ingeniería / estudios técnicos', q: 'estudio de ingeniería' },
+      { id: 'inmobiliaria', label: 'Inmobiliarias (maquetas)', q: 'inmobiliaria desarrollos' },
+      { id: 'publicidad', label: 'Publicidad / eventos / escenografía', q: 'agencia de publicidad eventos' },
+      { id: 'joyeria', label: 'Joyerías / orfebrería', q: 'joyería taller' },
+      { id: 'salud', label: 'Odontología / clínicas', q: 'consultorio odontológico' },
+      { id: 'educacion', label: 'Escuelas técnicas / universidades', q: 'escuela técnica universidad diseño' },
+      { id: 'automotriz', label: 'Talleres / autopartes', q: 'taller mecánico autopartes' },
+      { id: 'otro', label: 'Otro / general impresión 3D', q: 'empresa prototipos' }
+    ];
+
+    const SEEDS = [
+      { name:'Estudio Gonzalez A', rubro:'arquitectura', loc:'Merlo', phone:'1163989408', email:'', web:'', dir:'Matanza 1271, Merlo', notes:'Estudio de arquitectura en Merlo. Verificar teléfono.', status:'prospecto', seed:true },
+      { name:'Fusión Urbana Arquitectura', rubro:'arquitectura', loc:'Merlo', phone:'', email:'', web:'', dir:'Avellaneda 488, Merlo', notes:'Diseño y ejecución de obras.', status:'prospecto', seed:true },
+      { name:'Estudio D3B Arquitectos', rubro:'arquitectura', loc:'Merlo', phone:'', email:'arquitectos@estudiod3b.com', web:'', dir:'Merlo', notes:'Estudio familiar, +35 años. Tienen mail público.', status:'prospecto', seed:true },
+      { name:'Colegio de Arquitectos D III — Delegación Merlo', rubro:'arquitectura', loc:'Merlo', phone:'', email:'', web:'', dir:'Chacabuco 386, Merlo', notes:'Institución. Útil para networking / charlas / cartelería.', status:'prospecto', seed:true },
+      { name:'Horvial', rubro:'construccion', loc:'Merlo', phone:'1163702037', email:'info@horvial.com.ar', web:'https://horvial.com.ar/', dir:'25 de Mayo 1092, Merlo', notes:'Obras viales y civiles. Posible: piezas, señalética, prototipos de herrería.', status:'prospecto', seed:true },
+      { name:'Metalúrgica Salinas', rubro:'metalurgica', loc:'Merlo', phone:'', email:'', web:'https://metalurgicasalinas.com/', dir:'Merlo, Zona Oeste', notes:'Tornería, fresado, soldadura. Ideal para jigs, prototipos y piezas puente.', status:'prospecto', seed:true },
+      { name:'Mecanizado Ituzaingó S.A.', rubro:'metalurgica', loc:'Ituzaingó', phone:'1146211721', email:'', web:'https://mecanizado.com.ar/', dir:'Cerrito 1081, Ituzaingó', notes:'CNC, corte láser, estampado. Complemento (no competencia directa).', status:'prospecto', seed:true },
+      { name:'UNM — Diseño Industrial', rubro:'educacion', loc:'Moreno', phone:'', email:'cayt@unm.edu.ar', web:'https://www.unm.edu.ar/', dir:'Universidad Nacional de Moreno', notes:'Carrera con tecnicatura en prototipado rápido. Convenios / piezas para alumnos.', status:'prospecto', seed:true },
+      { name:'Hierros Libertad / Hierros Design', rubro:'diseno', loc:'Libertad', phone:'', email:'', web:'', dir:'Av. Eva Perón / Libertad, Merlo', notes:'Muebles industriales a medida. Piezas, herrajes, prototipos de diseño.', status:'prospecto', seed:true }
+    ];
+
+    const PITCH = {
+      arquitectura: 'Vi que trabajan proyectos de arquitectura. Desde DyL 3D Prints podemos darles una mano con:\n• Maquetas de presentación (escala, color, terreno)\n• Detalles constructivos y piezas para obra\n• Prototipos de mobiliario o carpintería\n• Entrega rápida (1 a 5 días) en Zona Oeste / AMBA\n\nSi tienen un plano o un archivo, les armo un presupuesto sin cargo.',
+      construccion: 'Trabajamos impresión 3D para constructoras: plantillas, piezas de replanteo, detalles, señalética de obra y prototipos de elementos a medida.\nSin mínimos, sin moldes, en días.\n\n¿Les sirve que les arme una propuesta concreta para un trabajo actual?',
+      diseno: 'Para diseño industrial la impresión 3D recorta semanas de ida y vuelta.\nHacemos prototipos funcionales, iteraciones rápidas y piezas de validación (también multi-color).\n\nSi tienen un STL/OBJ o incluso un boceto, les cotizo en el día.',
+      metalurgica: 'Complementamos al taller: jigs, utillajes, protectores, prototipos y piezas puente mientras llega el mecanizado o el importado.\nMateriales técnicos y entrega local en Zona Oeste.\n\n¿Tienen alguna pieza que hoy les frena una máquina o un pedido?',
+      ingenieria: 'Servicio de prototipado e impresión 3D para estudios técnicos: validación de geometrías, piezas de ensayo y series cortas.\nPresupuesto en el día, entrega 1–5 días.',
+      inmobiliaria: 'Maquetas de emprendimientos y unidades para sala de ventas o reuniones con inversores. Escala, color y detalles de entorno.\nPodemos cotizar a partir de planos.',
+      publicidad: 'Props, letras, displays, piezas de stand y merchandising 3D a medida. Ideal cuando hay que llegar a un evento y no hay tiempo de molde.\n¿Tienen algo próximo?',
+      joyeria: 'Prototipos, masters y piezas de prueba antes de fundir. Iteramos rápido y barato comparado con un master tradicional.',
+      salud: 'Modelos anatómicos, guías y piezas de apoyo (no dispositivos médicos certificados). Útil para explicación al paciente o planificación.',
+      educacion: 'Piezas didácticas, prototipos para cátedra y apoyo a trabajos prácticos. Podemos coordinar precios institucionales.',
+      automotriz: 'Repuestos que no se consiguen, adaptadores, protectores y utillajes de taller. A partir de muestra, foto o archivo.',
+      otro: 'Servicio de impresión 3D a medida: prototipos, piezas funcionales, series cortas y diseño si no tienen el archivo.\nEntrega 1–5 días en CABA y GBA.'
+    };
+
+    const defaultCfg = {
+      name: 'DyL 3D Prints',
+      wa: '5491153195024',
+      ig: '@dyl3dprints',
+      mail: 'hola@dyl3dprints.com',
+      zona: 'Zona Oeste · CABA y GBA'
+    };
+
+    let filter = 'todos';
+    let editingId = null;
+
+    function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+    function getCfg(){ try { return {...defaultCfg, ...JSON.parse(localStorage.getItem('dyl_cfg')||'{}')}; } catch { return {...defaultCfg}; } }
+    function getClients(){
+      try {
+        const raw = localStorage.getItem('dyl_clients');
+        if (raw) return JSON.parse(raw);
+      } catch {}
+      const seeded = SEEDS.map(s => ({...s, id: uid(), created: Date.now()}));
+      localStorage.setItem('dyl_clients', JSON.stringify(seeded));
+      return seeded;
+    }
+    function setClients(list){ localStorage.setItem('dyl_clients', JSON.stringify(list)); }
+
+    function fillSelects(){
+      const zona = document.getElementById('zona');
+      zona.innerHTML = Object.keys(ZONAS).map(z => `<option>${z}</option>`).join('');
+      fillLocalidades();
+      const rubroOpts = RUBROS.map(r => `<option value="${r.id}">${r.label}</option>`).join('');
+      document.getElementById('rubro').innerHTML = rubroOpts;
+      document.getElementById('cRubro').innerHTML = rubroOpts;
+      document.getElementById('propRubro').innerHTML = rubroOpts;
+    }
+    function fillLocalidades(){
+      const z = document.getElementById('zona').value;
+      document.getElementById('localidad').innerHTML = (ZONAS[z]||[]).map(l => `<option>${l}</option>`).join('');
+    }
+    function currentLoc(){
+      return (document.getElementById('localidadCustom').value.trim() || document.getElementById('localidad').value);
+    }
+    function currentRubro(){
+      return RUBROS.find(r => r.id === document.getElementById('rubro').value) || RUBROS[0];
+    }
+    function openSearch(type){
+      const loc = currentLoc();
+      const r = currentRubro();
+      const q = `${r.q} ${loc} Buenos Aires`;
+      const maps = `https://www.google.com/maps/search/${encodeURIComponent(q)}`;
+      const g = `https://www.google.com/search?q=${encodeURIComponent(q + ' teléfono whatsapp')}`;
+      if (type === 'maps' || type === 'both') window.open(maps, '_blank');
+      if (type === 'google' || type === 'both') window.open(g, '_blank');
+    }
+
+    function showTab(t){
+      ['buscar','cartera','propuesta','config'].forEach(id => {
+        document.getElementById('tab-'+id).classList.toggle('hidden', id !== t);
+      });
+      document.querySelectorAll('.navbtn').forEach(b => {
+        b.classList.toggle('text-sky-300', b.dataset.t === t);
+        b.classList.toggle('text-slate-400', b.dataset.t !== t);
+      });
+      if (t === 'cartera') renderCartera();
+      if (t === 'propuesta') { fillPropClients(); buildProposal(); }
+      if (t === 'config') loadCfgForm();
+    }
+
+    function statusColor(s){
+      return {prospecto:'text-sky-300', contactado:'text-amber-300', propuesta:'text-violet-300', cliente:'text-emerald-300', descartado:'text-slate-500'}[s] || 'text-slate-400';
+    }
+    function rubroLabel(id){ return (RUBROS.find(r=>r.id===id)||{}).label || id; }
+    function cleanPhone(p){
+      if (!p) return '';
+      let n = String(p).replace(/\D/g,'');
+      if (n.startsWith('00')) n = n.slice(2);
+      if (n.startsWith('54')) return n;
+      if (n.startsWith('9') && n.length >= 10) return '54'+n;
+      if (n.startsWith('11') || n.startsWith('15')) return '549'+n.replace(/^15/,'11');
+      if (n.length === 10) return '54'+n;
+      return n;
+    }
+
+    function renderSugeridos(){
+      document.getElementById('sugeridos').innerHTML = SEEDS.map(s => `
+        <div class="rounded-xl border border-sky-500/10 p-3 flex justify-between gap-3">
+          <div>
+            <p class="text-sm font-medium">${s.name}</p>
+            <p class="text-xs text-slate-400">${rubroLabel(s.rubro)} · ${s.loc}</p>
+          </div>
+          <button onclick='addSeed(${JSON.stringify(s).replace(/'/g,"\\'")})' class="text-xs text-sky-300 shrink-0">+ Cartera</button>
+        </div>`).join('');
+    }
+    function addSeed(s){
+      const list = getClients();
+      if (list.some(c => c.name === s.name)) { alert('Ya está en la cartera'); return; }
+      list.unshift({...s, id: uid(), created: Date.now()});
+      setClients(list);
+      showTab('cartera');
+    }
+
+    function setFilter(f){ filter = f; renderCartera(); }
+    function renderCartera(){
+      const q = (document.getElementById('q').value||'').toLowerCase();
+      let list = getClients();
+      if (filter !== 'todos') list = list.filter(c => c.status === filter);
+      if (q) list = list.filter(c => [c.name,c.loc,c.rubro,c.notes,c.phone].join(' ').toLowerCase().includes(q));
+      document.getElementById('carteraCount').textContent = `${list.length} contactos`;
+      document.querySelectorAll('.filt').forEach(b => {
+        b.classList.toggle('bg-sky-500', b.dataset.f === filter);
+        b.classList.toggle('text-ink', b.dataset.f === filter);
+      });
+      if (!list.length) {
+        document.getElementById('carteraList').innerHTML = '<p class="text-sm text-slate-500 py-8 text-center">Nada acá todavía. Buscá en Maps y agregá el primer contacto.</p>';
+        return;
+      }
+      document.getElementById('carteraList').innerHTML = list.map(c => {
+        const ph = cleanPhone(c.phone);
+        return `<article class="card rounded-2xl p-4">
+          <div class="flex justify-between gap-2">
+            <div>
+              <p class="font-medium">${c.name}</p>
+              <p class="text-xs text-slate-400">${rubroLabel(c.rubro)} · ${c.loc||'—'}</p>
+            </div>
+            <span class="text-[11px] ${statusColor(c.status)}">${c.status}</span>
+          </div>
+          ${c.dir ? `<p class="text-xs text-slate-500 mt-1">${c.dir}</p>` : ''}
+          ${c.notes ? `<p class="text-xs text-slate-400 mt-2">${c.notes}</p>` : ''}
+          <div class="flex flex-wrap gap-2 mt-3">
+            ${ph ? `<a class="text-xs px-3 py-1.5 rounded-full bg-emerald-500/15 text-emerald-300" href="https://wa.me/${ph}">WhatsApp</a>` : ''}
+            ${c.phone ? `<a class="text-xs px-3 py-1.5 rounded-full chip" href="tel:${c.phone}">Llamar</a>` : ''}
+            ${c.email ? `<a class="text-xs px-3 py-1.5 rounded-full chip" href="mailto:${c.email}">Mail</a>` : ''}
+            ${c.web ? `<a class="text-xs px-3 py-1.5 rounded-full chip" href="${c.web.startsWith('http')?c.web:'https://'+c.web}" target="_blank">Web</a>` : ''}
+            <button class="text-xs px-3 py-1.5 rounded-full bg-sky-500 text-ink font-medium" onclick="goProposal('${c.id}')">Propuesta</button>
+            <button class="text-xs px-3 py-1.5 rounded-full chip" onclick="openClientModal('${c.id}')">Editar</button>
+          </div>
+        </article>`;
+      }).join('');
+    }
+
+    function openClientModal(id){
+      editingId = id || null;
+      const c = id ? getClients().find(x => x.id === id) : null;
+      document.getElementById('modalTitle').textContent = c ? 'Editar cliente' : 'Nuevo cliente';
+      document.getElementById('cId').value = c?.id || '';
+      document.getElementById('cName').value = c?.name || '';
+      document.getElementById('cRubro').value = c?.rubro || 'arquitectura';
+      document.getElementById('cLoc').value = c?.loc || currentLoc();
+      document.getElementById('cPhone').value = c?.phone || '';
+      document.getElementById('cEmail').value = c?.email || '';
+      document.getElementById('cWeb').value = c?.web || '';
+      document.getElementById('cDir').value = c?.dir || '';
+      document.getElementById('cStatus').value = c?.status || 'prospecto';
+      document.getElementById('cNotes').value = c?.notes || '';
+      document.getElementById('modal').classList.remove('hidden');
+    }
+    function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
+    function saveClient(){
+      const name = document.getElementById('cName').value.trim();
+      if (!name) return alert('Poné el nombre');
+      const item = {
+        id: document.getElementById('cId').value || uid(),
+        name,
+        rubro: document.getElementById('cRubro').value,
+        loc: document.getElementById('cLoc').value.trim(),
+        phone: document.getElementById('cPhone').value.trim(),
+        email: document.getElementById('cEmail').value.trim(),
+        web: document.getElementById('cWeb').value.trim(),
+        dir: document.getElementById('cDir').value.trim(),
+        status: document.getElementById('cStatus').value,
+        notes: document.getElementById('cNotes').value.trim(),
+        created: Date.now()
+      };
+      let list = getClients();
+      const i = list.findIndex(x => x.id === item.id);
+      if (i >= 0) list[i] = {...list[i], ...item};
+      else list.unshift(item);
+      setClients(list);
+      closeModal();
+      renderAll();
+    }
+    function deleteClient(){
+      const id = document.getElementById('cId').value;
+      if (!id) return closeModal();
+      if (!confirm('¿Eliminar este contacto?')) return;
+      setClients(getClients().filter(c => c.id !== id));
+      closeModal();
+      renderAll();
+    }
+
+    function fillPropClients(){
+      const sel = document.getElementById('propClient');
+      const list = getClients();
+      sel.innerHTML = '<option value="">— elegir de la cartera —</option>' + list.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    }
+    function fillFromClient(){
+      const id = document.getElementById('propClient').value;
+      const c = getClients().find(x => x.id === id);
+      if (!c) return;
+      document.getElementById('propNombre').value = c.name;
+      document.getElementById('propRubro').value = c.rubro;
+      document.getElementById('propPhone').value = cleanPhone(c.phone);
+      buildProposal();
+    }
+    function goProposal(id){
+      showTab('propuesta');
+      document.getElementById('propClient').value = id;
+      fillFromClient();
+    }
+    function buildProposal(){
+      const cfg = getCfg();
+      const nombre = document.getElementById('propNombre').value.trim() || 'equipo';
+      const rubro = document.getElementById('propRubro').value;
+      const body = PITCH[rubro] || PITCH.otro;
+      const msg = `Hola, ¿qué tal? Soy de ${cfg.name}.\n\n${body}\n\nQuedo atento por acá.\n${cfg.name}\nWhatsApp ${cfg.wa}\n${cfg.ig} · ${cfg.mail}\n${cfg.zona}`;
+      document.getElementById('propMsg').value = msg.replace('Hola, ¿qué tal?', `Hola ${nombre}, ¿qué tal?`);
+    }
+    function copyMsg(){
+      const t = document.getElementById('propMsg').value;
+      navigator.clipboard.writeText(t).then(()=>alert('Mensaje copiado')).catch(()=>prompt('Copiá:', t));
+    }
+    function sendWA(){
+      const phone = cleanPhone(document.getElementById('propPhone').value);
+      const msg = encodeURIComponent(document.getElementById('propMsg').value);
+      if (!phone) {
+        alert('Falta el WhatsApp del cliente. Se va a abrir WhatsApp para que elijas el chat.');
+        window.open('https://wa.me/?text='+msg, '_blank');
+        return;
+      }
+      const id = document.getElementById('propClient').value;
+      if (id) {
+        const list = getClients();
+        const i = list.findIndex(c => c.id === id);
+        if (i>=0 && list[i].status === 'prospecto') { list[i].status = 'propuesta'; setClients(list); }
+      }
+      window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    }
+    function printProposal(){
+      const cfg = getCfg();
+      const nombre = document.getElementById('propNombre').value.trim() || 'Cliente';
+      const body = document.getElementById('propMsg').value.replace(/\n/g,'<br>');
+      document.getElementById('printArea').innerHTML = `
+        <div style="font-family:Inter,sans-serif;max-width:720px;margin:auto">
+          <h1 style="font-size:22px;margin:0">${cfg.name}</h1>
+          <p style="color:#64748b;margin:4px 0 24px">Propuesta de servicio de impresión 3D</p>
+          <p><b>Para:</b> ${nombre}</p>
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0" />
+          <div style="line-height:1.6">${body}</div>
+          <p style="margin-top:32px;font-size:12px;color:#64748b">${cfg.zona} · ${cfg.mail} · ${cfg.ig}</p>
+        </div>`;
+      window.print();
+    }
+
+    function loadCfgForm(){
+      const c = getCfg();
+      document.getElementById('cfgName').value = c.name;
+      document.getElementById('cfgWA').value = c.wa;
+      document.getElementById('cfgIG').value = c.ig;
+      document.getElementById('cfgMail').value = c.mail;
+      document.getElementById('cfgZona').value = c.zona;
+    }
+    function saveCfg(){
+      localStorage.setItem('dyl_cfg', JSON.stringify({
+        name: document.getElementById('cfgName').value.trim(),
+        wa: document.getElementById('cfgWA').value.trim(),
+        ig: document.getElementById('cfgIG').value.trim(),
+        mail: document.getElementById('cfgMail').value.trim(),
+        zona: document.getElementById('cfgZona').value.trim()
+      }));
+      alert('Guardado');
+    }
+    function exportData(){
+      const blob = new Blob([JSON.stringify({cfg:getCfg(), clients:getClients()}, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'clientes-dyl.json';
+      a.click();
+    }
+    function importData(e){
+      const f = e.target.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const d = JSON.parse(r.result);
+          if (d.cfg) localStorage.setItem('dyl_cfg', JSON.stringify(d.cfg));
+          if (d.clients) setClients(d.clients);
+          renderAll();
+          alert('Importado');
+        } catch { alert('Archivo inválido'); }
+      };
+      r.readAsText(f);
+    }
+
+    function renderAll(){
+      renderSugeridos();
+      renderCartera();
+      fillPropClients();
+    }
+
+    fillSelects();
+    loadCfgForm();
+    renderAll();
+    document.getElementById('propRubro').addEventListener('change', buildProposal);
+    document.getElementById('propNombre').addEventListener('input', buildProposal);
+  </script>
+</body>
+</html>
