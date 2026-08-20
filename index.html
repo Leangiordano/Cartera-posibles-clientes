@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Clientes DyL" />
-  <title>Clientes DyL · Prospectos 3D</title>
+  <title>Clientes DyL · CABA y Zona Sur</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -16,11 +16,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            ink: '#0F172A',
-            accent: '#0EA5E9',
-            accent2: '#38BDF8'
-          },
+          colors: { ink: '#0F172A', accent: '#0EA5E9' },
           fontFamily: {
             sans: ['Inter', 'system-ui', 'sans-serif'],
             display: ['Space Grotesk', 'Inter', 'sans-serif']
@@ -29,18 +25,16 @@
       }
     }
   </script>
-  <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Clientes DyL&quot;,&quot;short_name&quot;:&quot;Clientes DyL&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#0F172A&quot;,&quot;theme_color&quot;:&quot;#0F172A&quot;}" />
   <style>
     :root { color-scheme: dark; }
     html, body { background: #0B1220; }
     body { padding-bottom: env(safe-area-inset-bottom); }
     .no-scrollbar::-webkit-scrollbar { display: none; }
-    .card { background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(15,23,42,.78)); border: 1px solid rgba(56,189,248,.12); }
+    .card { background: linear-gradient(180deg, rgba(15,23,42,.94), rgba(15,23,42,.8)); border: 1px solid rgba(56,189,248,.12); }
     .chip { border: 1px solid rgba(56,189,248,.22); }
     textarea, input, select { background: #0B1220; }
-    .fab-safe { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
     @media print {
-      nav, header, .no-print { display: none !important; }
+      nav, header, .no-print, #tab-directorio, #tab-cartera, #tab-config { display: none !important; }
       body { background: #fff; color: #111; }
       #printArea { display: block !important; color: #111; }
     }
@@ -51,59 +45,32 @@
     <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
       <div>
         <p class="font-display text-lg tracking-tight"><span class="font-bold">DyL</span> <span class="text-sky-400">Clientes</span></p>
-        <p class="text-[11px] text-slate-400">Prospectos · propuestas · seguimiento</p>
+        <p class="text-[11px] text-slate-400">CABA y Zona Sur · directorio + propuestas</p>
       </div>
       <button onclick="showTab('config')" class="text-xs px-3 py-1.5 rounded-full chip text-sky-300">Ajustes</button>
     </div>
   </header>
 
   <main class="max-w-3xl mx-auto px-4 pt-4 pb-28">
-    <!-- BUSCAR -->
-    <section id="tab-buscar">
+    <section id="tab-directorio">
       <div class="card rounded-2xl p-4 mb-4">
-        <h2 class="font-display text-xl mb-1">Buscar clientes</h2>
-        <p class="text-sm text-slate-400 mb-4">Elegí zona, localidad y rubro. Se abren búsquedas reales en Google Maps y Google. Después cargás el contacto acá y generás la propuesta.</p>
-
-        <label class="text-xs text-slate-400">Zona</label>
-        <select id="zona" onchange="fillLocalidades()" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
-
-        <label class="text-xs text-slate-400">Localidad</label>
-        <select id="localidad" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
-
-        <label class="text-xs text-slate-400">O escribí otra localidad</label>
-        <input id="localidadCustom" placeholder="Ej: Castelar, San Justo, Palermo…" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm" />
-
-        <label class="text-xs text-slate-400">Rubro</label>
-        <select id="rubro" class="w-full mt-1 mb-4 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
-
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="openSearch('maps')" class="rounded-xl bg-sky-500 text-ink font-semibold py-3 text-sm">Abrir Maps</button>
-          <button onclick="openSearch('google')" class="rounded-xl bg-slate-800 border border-sky-500/20 py-3 text-sm">Buscar en Google</button>
+        <h2 class="font-display text-xl mb-1">Directorio</h2>
+        <p class="text-sm text-slate-400 mb-3">Prospectos de CABA y Zona Sur con contacto adentro. Datos públicos: verificá teléfono antes de escribir.</p>
+        <div class="flex gap-2 mb-3">
+          <button onclick="setZona('todas')" data-z="todas" class="zchip chip rounded-full px-3 py-1.5 text-xs">Todas</button>
+          <button onclick="setZona('CABA')" data-z="CABA" class="zchip chip rounded-full px-3 py-1.5 text-xs">CABA</button>
+          <button onclick="setZona('Zona Sur')" data-z="Zona Sur" class="zchip chip rounded-full px-3 py-1.5 text-xs">Zona Sur</button>
         </div>
-        <button onclick="openSearch('both')" class="w-full mt-2 rounded-xl border border-sky-400/30 text-sky-300 py-2.5 text-sm">Abrir Maps + Google</button>
-      </div>
-
-      <div class="card rounded-2xl p-4 mb-4">
-        <h3 class="font-display mb-2">Cómo prospectar (rápido)</h3>
-        <ol class="text-sm text-slate-300 space-y-2 list-decimal pl-5">
-          <li>Abrí Maps y filtrá negocios con teléfono o WhatsApp.</li>
-          <li>Entrá al perfil: copiá nombre, teléfono, web e Instagram.</li>
-          <li>Volvé acá → <b>Agregar cliente</b> y pegá los datos.</li>
-          <li>Generá la propuesta y mandala por WhatsApp en un toque.</li>
-        </ol>
-        <p class="text-xs text-slate-500 mt-3">Tip: priorizá estudios chicos/medianos de arquitectura, metalúrgicas, constructoras y diseñadores. Ahí la impresión 3D resuelve maquetas, jigs, prototipos y repuestos sin importar.</p>
-      </div>
-
-      <div class="card rounded-2xl p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="font-display">Sugeridos Zona Oeste</h3>
-          <span class="text-[11px] text-slate-500">verificar datos</span>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <select id="fLoc" onchange="renderDir()" class="rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
+          <select id="fRubro" onchange="renderDir()" class="rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
         </div>
-        <div id="sugeridos" class="space-y-2"></div>
+        <input id="fQ" oninput="renderDir()" placeholder="Buscar por nombre, barrio, teléfono…" class="w-full rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm" />
+        <p id="dirCount" class="text-xs text-slate-500 mt-2"></p>
       </div>
+      <div id="dirList" class="space-y-3"></div>
     </section>
 
-    <!-- CARTERA -->
     <section id="tab-cartera" class="hidden">
       <div class="flex items-center justify-between mb-3">
         <div>
@@ -119,16 +86,15 @@
         <button onclick="setFilter('propuesta')" data-f="propuesta" class="filt chip whitespace-nowrap rounded-full px-3 py-1.5 text-xs">Propuesta</button>
         <button onclick="setFilter('cliente')" data-f="cliente" class="filt chip whitespace-nowrap rounded-full px-3 py-1.5 text-xs">Cliente</button>
       </div>
-      <input id="q" oninput="renderCartera()" placeholder="Filtrar por nombre, rubro, localidad…" class="w-full mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm" />
+      <input id="q" oninput="renderCartera()" placeholder="Filtrar cartera…" class="w-full mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm" />
       <div id="carteraList" class="space-y-3"></div>
     </section>
 
-    <!-- PROPUESTA -->
     <section id="tab-propuesta" class="hidden">
-      <div class="card rounded-2xl p-4 mb-4">
-        <h2 class="font-display text-xl mb-1">Propuesta en 1 clic</h2>
-        <p class="text-sm text-slate-400 mb-4">Elegí un cliente de la cartera o completá a mano. El texto se arma según el rubro.</p>
-        <label class="text-xs text-slate-400">Cliente</label>
+      <div class="card rounded-2xl p-4">
+        <h2 class="font-display text-xl mb-1">Propuesta</h2>
+        <p class="text-sm text-slate-400 mb-4">Se arma según el rubro. Un toque y sale por WhatsApp.</p>
+        <label class="text-xs text-slate-400">Cliente de la cartera</label>
         <select id="propClient" onchange="fillFromClient()" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2.5 text-sm"></select>
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -137,10 +103,10 @@
           </div>
           <div>
             <label class="text-xs text-slate-400">Rubro</label>
-            <select id="propRubro" onchange="buildProposal()" class="w-full mt-1 rounded-xl border border-sky-500/20 px-3 py-2 text-sm"></select>
+            <select id="propRubro" class="w-full mt-1 rounded-xl border border-sky-500/20 px-3 py-2 text-sm"></select>
           </div>
         </div>
-        <label class="text-xs text-slate-400 mt-3 block">WhatsApp del cliente (solo números)</label>
+        <label class="text-xs text-slate-400 mt-3 block">WhatsApp del cliente</label>
         <input id="propPhone" inputmode="tel" placeholder="54911…" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
         <label class="text-xs text-slate-400">Mensaje</label>
         <textarea id="propMsg" rows="12" class="w-full mt-1 rounded-xl border border-sky-500/20 px-3 py-2 text-sm leading-relaxed"></textarea>
@@ -152,7 +118,6 @@
       </div>
     </section>
 
-    <!-- CONFIG -->
     <section id="tab-config" class="hidden">
       <div class="card rounded-2xl p-4 mb-4">
         <h2 class="font-display text-xl mb-3">Datos de DyL</h2>
@@ -164,13 +129,12 @@
         <input id="cfgIG" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
         <label class="text-xs text-slate-400">Email</label>
         <input id="cfgMail" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
-        <label class="text-xs text-slate-400">Zona / pie de propuesta</label>
+        <label class="text-xs text-slate-400">Zona / pie</label>
         <input id="cfgZona" class="w-full mt-1 mb-3 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
         <button onclick="saveCfg()" class="w-full rounded-xl bg-sky-500 text-ink font-semibold py-3 text-sm">Guardar</button>
       </div>
       <div class="card rounded-2xl p-4">
-        <h3 class="font-display mb-2">Respaldo</h3>
-        <p class="text-sm text-slate-400 mb-3">Los clientes se guardan en este iPhone. Exportá un JSON para no perderlos.</p>
+        <h3 class="font-display mb-2">Respaldo de cartera</h3>
         <div class="grid grid-cols-2 gap-2">
           <button onclick="exportData()" class="rounded-xl bg-slate-800 border border-sky-500/20 py-3 text-sm">Exportar</button>
           <label class="rounded-xl bg-slate-800 border border-sky-500/20 py-3 text-sm text-center cursor-pointer">
@@ -178,20 +142,19 @@
             <input type="file" accept="application/json" class="hidden" onchange="importData(event)" />
           </label>
         </div>
-        <button onclick="if(confirm('¿Borrar toda la cartera?')){localStorage.removeItem('dyl_clients'); renderAll();}" class="w-full mt-2 text-rose-400 text-sm py-2">Vaciar cartera</button>
+        <button onclick="if(confirm('¿Borrar la cartera?')){localStorage.removeItem('dyl_clients'); renderCartera(); fillPropClients();}" class="w-full mt-2 text-rose-400 text-sm py-2">Vaciar cartera</button>
       </div>
     </section>
   </main>
 
   <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-sky-500/10 bg-[#0B1220]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
     <div class="max-w-3xl mx-auto grid grid-cols-3 text-center text-[11px]">
-      <button onclick="showTab('buscar')" class="navbtn py-3 text-sky-300" data-t="buscar">Buscar</button>
+      <button onclick="showTab('directorio')" class="navbtn py-3 text-sky-300" data-t="directorio">Directorio</button>
       <button onclick="showTab('cartera')" class="navbtn py-3 text-slate-400" data-t="cartera">Cartera</button>
       <button onclick="showTab('propuesta')" class="navbtn py-3 text-slate-400" data-t="propuesta">Propuesta</button>
     </div>
   </nav>
 
-  <!-- MODAL CLIENTE -->
   <div id="modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
     <div class="max-w-md mx-auto mt-8 card rounded-2xl p-4">
       <div class="flex justify-between items-center mb-3">
@@ -209,7 +172,7 @@
       <input id="cPhone" inputmode="tel" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
       <label class="text-xs text-slate-400">Email</label>
       <input id="cEmail" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
-      <label class="text-xs text-slate-400">Web / Instagram</label>
+      <label class="text-xs text-slate-400">Web</label>
       <input id="cWeb" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
       <label class="text-xs text-slate-400">Dirección</label>
       <input id="cDir" class="w-full mt-1 mb-2 rounded-xl border border-sky-500/20 px-3 py-2 text-sm" />
@@ -233,52 +196,112 @@
   <div id="printArea" class="hidden p-8 bg-white text-slate-900"></div>
 
   <script>
-    const ZONAS = {
-      'Zona Oeste': ['Merlo','Libertad','San Antonio de Padua','Parque San Martín','Pontevedra','Mariano Acosta','Moreno','Paso del Rey','Ituzaingó','Castelar','Morón','Haedo','Ramos Mejía','San Justo','La Matanza','Marcos Paz','General Rodríguez','Hurlingham'],
-      'CABA': ['Palermo','Belgrano','Villa Crespo','Caballito','Núñez','Colegiales','Almagro','Barracas','Puerto Madero','Microcentro'],
-      'Zona Norte': ['Vicente López','Olivos','San Isidro','Martínez','Tigre','Pilar','San Fernando','Don Torcuato'],
-      'Zona Sur': ['Avellaneda','Lanús','Lomas de Zamora','Quilmes','Banfield','Temperley']
-    };
-
     const RUBROS = [
-      { id: 'arquitectura', label: 'Estudios de arquitectura', q: 'estudio de arquitectura' },
-      { id: 'construccion', label: 'Constructoras / MMO', q: 'constructora' },
-      { id: 'diseno', label: 'Diseño industrial', q: 'diseñador industrial' },
-      { id: 'metalurgica', label: 'Metalúrgicas / talleres', q: 'metalúrgica taller mecanizado' },
-      { id: 'ingenieria', label: 'Ingeniería / estudios técnicos', q: 'estudio de ingeniería' },
-      { id: 'inmobiliaria', label: 'Inmobiliarias (maquetas)', q: 'inmobiliaria desarrollos' },
-      { id: 'publicidad', label: 'Publicidad / eventos / escenografía', q: 'agencia de publicidad eventos' },
-      { id: 'joyeria', label: 'Joyerías / orfebrería', q: 'joyería taller' },
-      { id: 'salud', label: 'Odontología / clínicas', q: 'consultorio odontológico' },
-      { id: 'educacion', label: 'Escuelas técnicas / universidades', q: 'escuela técnica universidad diseño' },
-      { id: 'automotriz', label: 'Talleres / autopartes', q: 'taller mecánico autopartes' },
-      { id: 'otro', label: 'Otro / general impresión 3D', q: 'empresa prototipos' }
+      { id: 'arquitectura', label: 'Arquitectura' },
+      { id: 'construccion', label: 'Construcción' },
+      { id: 'diseno', label: 'Diseño industrial' },
+      { id: 'metalurgica', label: 'Metalúrgica / taller' },
+      { id: 'inmobiliaria', label: 'Inmobiliaria' },
+      { id: 'educacion', label: 'Educación' },
+      { id: 'joyeria', label: 'Joyería' },
+      { id: 'otro', label: 'Otro' }
     ];
 
-    const SEEDS = [
-      { name:'Estudio Gonzalez A', rubro:'arquitectura', loc:'Merlo', phone:'1163989408', email:'', web:'', dir:'Matanza 1271, Merlo', notes:'Estudio de arquitectura en Merlo. Verificar teléfono.', status:'prospecto', seed:true },
-      { name:'Fusión Urbana Arquitectura', rubro:'arquitectura', loc:'Merlo', phone:'', email:'', web:'', dir:'Avellaneda 488, Merlo', notes:'Diseño y ejecución de obras.', status:'prospecto', seed:true },
-      { name:'Estudio D3B Arquitectos', rubro:'arquitectura', loc:'Merlo', phone:'', email:'arquitectos@estudiod3b.com', web:'', dir:'Merlo', notes:'Estudio familiar, +35 años. Tienen mail público.', status:'prospecto', seed:true },
-      { name:'Colegio de Arquitectos D III — Delegación Merlo', rubro:'arquitectura', loc:'Merlo', phone:'', email:'', web:'', dir:'Chacabuco 386, Merlo', notes:'Institución. Útil para networking / charlas / cartelería.', status:'prospecto', seed:true },
-      { name:'Horvial', rubro:'construccion', loc:'Merlo', phone:'1163702037', email:'info@horvial.com.ar', web:'https://horvial.com.ar/', dir:'25 de Mayo 1092, Merlo', notes:'Obras viales y civiles. Posible: piezas, señalética, prototipos de herrería.', status:'prospecto', seed:true },
-      { name:'Metalúrgica Salinas', rubro:'metalurgica', loc:'Merlo', phone:'', email:'', web:'https://metalurgicasalinas.com/', dir:'Merlo, Zona Oeste', notes:'Tornería, fresado, soldadura. Ideal para jigs, prototipos y piezas puente.', status:'prospecto', seed:true },
-      { name:'Mecanizado Ituzaingó S.A.', rubro:'metalurgica', loc:'Ituzaingó', phone:'1146211721', email:'', web:'https://mecanizado.com.ar/', dir:'Cerrito 1081, Ituzaingó', notes:'CNC, corte láser, estampado. Complemento (no competencia directa).', status:'prospecto', seed:true },
-      { name:'UNM — Diseño Industrial', rubro:'educacion', loc:'Moreno', phone:'', email:'cayt@unm.edu.ar', web:'https://www.unm.edu.ar/', dir:'Universidad Nacional de Moreno', notes:'Carrera con tecnicatura en prototipado rápido. Convenios / piezas para alumnos.', status:'prospecto', seed:true },
-      { name:'Hierros Libertad / Hierros Design', rubro:'diseno', loc:'Libertad', phone:'', email:'', web:'', dir:'Av. Eva Perón / Libertad, Merlo', notes:'Muebles industriales a medida. Piezas, herrajes, prototipos de diseño.', status:'prospecto', seed:true }
+    const DIR = [
+      { name:'AB Arquitectos', zona:'CABA', loc:'Palermo', rubro:'arquitectura', phone:'1147777098', email:'estudioab@fibertel.com.ar', web:'https://www.abarquitectos.net/', dir:'Fitz Roy 2071 1°A', notes:'Estudio en Palermo. Obras recientes en el barrio.' },
+      { name:'Estudio Aldao Arquitectos', zona:'CABA', loc:'Palermo', rubro:'arquitectura', phone:'1148565372', email:'', web:'https://www.aldaoarquitectos.com.ar', dir:'Loyola 1654', notes:'Cel. 15 4404-7557. Diseño y obras llave en mano, también stands.' },
+      { name:'PALCA', zona:'CABA', loc:'Microcentro', rubro:'arquitectura', phone:'', email:'info@palca.com.ar', web:'https://palca.com.ar', dir:'Viamonte 759 Oficina 41', notes:'Estudio dirigido por Germán Lentini. Contacto por mail.' },
+      { name:'Héctor Boccacci Arquitectura Industrial', zona:'CABA', loc:'Núñez', rubro:'arquitectura', phone:'', email:'', web:'', dir:'Av. Cabildo 3344', notes:'Arquitectura industrial. Pedir teléfono actualizado.' },
+      { name:'Arquitecta Claudia Jarast', zona:'CABA', loc:'Palermo', rubro:'arquitectura', phone:'', email:'', web:'', dir:'Costa Rica 4186', notes:'Estudio en Palermo. Completar teléfono al contactar.' },
+      { name:'Colaneri Molinero Arquitectos', zona:'CABA', loc:'Colegiales', rubro:'arquitectura', phone:'', email:'', web:'', dir:'Zabala 3354', notes:'Estudio en Colegiales.' },
+      { name:'Estudio Maraude Arquitectos', zona:'CABA', loc:'Villa Pueyrredón', rubro:'arquitectura', phone:'', email:'', web:'', dir:'Terrada 3809', notes:'Estudio en Villa Pueyrredón.' },
+      { name:'Estudio Arquitecto Daniel Martínez y Asociados', zona:'CABA', loc:'Villa Urquiza', rubro:'arquitectura', phone:'', email:'', web:'', dir:'Mendoza 5885', notes:'Estudio en Villa Urquiza.' },
+      { name:'Ábaco Diseño', zona:'CABA', loc:'CABA', rubro:'diseno', phone:'1144438935', email:'info@abacodiseno.com.ar', web:'https://www.abacodiseno.com.ar', dir:'CABA', notes:'También 11 3221-2032 / 11 15-5764-7020.' },
+      { name:'Dilo Diseño S.A.', zona:'CABA', loc:'Recoleta', rubro:'diseno', phone:'1148115263', email:'', web:'', dir:'Riobamba 853 8°A', notes:'Estudio de diseño industrial.' },
+      { name:'Teckdes S.R.L.', zona:'CABA', loc:'Barracas', rubro:'diseno', phone:'1143005930', email:'', web:'', dir:'Montes de Oca 15 piso 6', notes:'Diseño industrial en Barracas.' },
+      { name:'Trum Design', zona:'CABA', loc:'Chacarita', rubro:'diseno', phone:'1145510870', email:'', web:'', dir:'Av. Corrientes 6445', notes:'Diseño industrial.' },
+      { name:'AF Design (Andrés Ferrero)', zona:'CABA', loc:'Belgrano', rubro:'diseno', phone:'1147835388', email:'', web:'', dir:'Montañeses 1853 4°D', notes:'Diseño industrial en Belgrano.' },
+      { name:'Dídimo Diseño Industrial', zona:'CABA', loc:'Villa Devoto', rubro:'diseno', phone:'1145014858', email:'', web:'', dir:'Vallejos 4469 2°A', notes:'Diseño industrial.' },
+      { name:'FADU — UBA', zona:'CABA', loc:'Núñez', rubro:'educacion', phone:'', email:'', web:'http://www.fadu.uba.ar/', dir:'Pabellón III, Ciudad Universitaria', notes:'Facultad de Arquitectura, Diseño y Urbanismo. Piezas didácticas / cátedras / convenios.' },
+      { name:'Universidad de Palermo — Arquitectura', zona:'CABA', loc:'Palermo', rubro:'educacion', phone:'1149644600', email:'informes@palermo.edu', web:'https://www.palermo.edu/arquitectura/', dir:'Mario Bravo 1259', notes:'WhatsApp informes: +54 9 11 2163-5008.' },
+      { name:'UADE — Facultad de Arquitectura y Diseño', zona:'CABA', loc:'Monserrat', rubro:'educacion', phone:'1140007600', email:'ingresantes@uade.edu.ar', web:'https://www.uade.edu.ar/', dir:'Lima 775', notes:'WhatsApp: +54 9 11 5892-1783.' },
+      { name:'Universidad de Belgrano — Arquitectura', zona:'CABA', loc:'Belgrano', rubro:'educacion', phone:'1147885400', email:'', web:'https://www.ub.edu.ar/', dir:'Zabala 1837', notes:'Facultad de Arquitectura y Urbanismo.' },
+      { name:'Ojo de Mar — Joyería', zona:'CABA', loc:'San Telmo', rubro:'joyeria', phone:'', email:'', web:'', dir:'Defensa 1066 local 1 y 2', notes:'Plata 925 de autor. Instagram @ojodemar_plata925. Prototipos / masters.' },
+      { name:'SURI Joyería', zona:'CABA', loc:'San Telmo', rubro:'joyeria', phone:'', email:'', web:'', dir:'Defensa 1066 Local 6', notes:'Orfebrería de autor en San Telmo.' },
+      { name:'El Tasador Joyería', zona:'CABA', loc:'Once', rubro:'joyeria', phone:'1133656641', email:'', web:'https://el-tasador.com.ar/', dir:'Corrientes y Pueyrredón', notes:'WhatsApp tasaciones. Taller / piezas a medida.' },
+      { name:'AIP Arquitectura Integral Paisajista', zona:'Zona Sur', loc:'Banfield', rubro:'arquitectura', phone:'1142426439', email:'', web:'', dir:'Av. H. Yrigoyen 7252', notes:'Arquitectura y paisaje.' },
+      { name:'Constru Arq', zona:'Zona Sur', loc:'Banfield', rubro:'arquitectura', phone:'1142421915', email:'', web:'', dir:'Almafuerte 1288', notes:'Estudio de arquitectura.' },
+      { name:'Gustavo Lonati — Arquitecto', zona:'Zona Sur', loc:'Banfield', rubro:'arquitectura', phone:'1142426429', email:'', web:'', dir:'Alem 1527', notes:'Estudio individual.' },
+      { name:'SM Estudio', zona:'Zona Sur', loc:'Banfield', rubro:'arquitectura', phone:'1142485731', email:'', web:'', dir:'Rincón 355', notes:'Relevamientos y refacciones.' },
+      { name:'Taller Ñ — Arquitectura y Comunicación', zona:'Zona Sur', loc:'Banfield', rubro:'arquitectura', phone:'1142022324', email:'', web:'', dir:'Gral. Arenales 1947', notes:'Arquitectura y comunicación.' },
+      { name:'Lorena Vega — Arquitecta', zona:'Zona Sur', loc:'Banfield', rubro:'arquitectura', phone:'1142883464', email:'', web:'', dir:'Levalle 1489', notes:'Cel. 11 15-5262-3644.' },
+      { name:'Arquimia', zona:'Zona Sur', loc:'Lomas de Zamora', rubro:'arquitectura', phone:'1142931660', email:'', web:'', dir:'Loria 61', notes:'Proyecto y dirección de obras.' },
+      { name:'Dass Arquitectura y Construcciones', zona:'Zona Sur', loc:'Temperley', rubro:'construccion', phone:'1142444700', email:'', web:'', dir:'Av. Meeks 1035', notes:'Arquitectura y construcción.' },
+      { name:'Estudio Moia', zona:'Zona Sur', loc:'Lomas de Zamora', rubro:'arquitectura', phone:'1155994058', email:'', web:'', dir:'Laprida 755', notes:'Interiorismo y reciclajes.' },
+      { name:'Lerin SRL', zona:'Zona Sur', loc:'Lomas de Zamora', rubro:'construccion', phone:'1142834247', email:'', web:'', dir:'Gorriti 1737', notes:'Arquitectura y construcciones.' },
+      { name:'MS Arquitectura', zona:'Zona Sur', loc:'Temperley', rubro:'arquitectura', phone:'1142431486', email:'', web:'', dir:'Ángel Gallardo 250', notes:'Decoración y dirección de obras.' },
+      { name:'Arquitectura Raúl Ovejero y Asociados', zona:'Zona Sur', loc:'Lomas de Zamora', rubro:'arquitectura', phone:'1142925356', email:'', web:'', dir:'Oliden 1417', notes:'Estudio de arquitectura.' },
+      { name:'Crear Constructora', zona:'Zona Sur', loc:'Adrogué', rubro:'construccion', phone:'1142142877', email:'', web:'', dir:'Av. H. Yrigoyen 13872', notes:'Obras civiles e industriales.' },
+      { name:'CA.R.E.A Estudio de Arquitectura', zona:'Zona Sur', loc:'Adrogué', rubro:'arquitectura', phone:'1142387425', email:'', web:'', dir:'Ejército Argentino 971 Of. 3', notes:'Estudio en Adrogué.' },
+      { name:'Castelli Construcciones', zona:'Zona Sur', loc:'Adrogué', rubro:'construccion', phone:'1142932230', email:'', web:'', dir:'Castelli 1544', notes:'Constructora.' },
+      { name:'Jorge Dewey — Consultorio de Arquitectura', zona:'Zona Sur', loc:'Adrogué', rubro:'arquitectura', phone:'1142142373', email:'', web:'', dir:'Pje. La Delicia 1181 PB Of. 19', notes:'Consultorio de arquitectura.' },
+      { name:'Forma SRL Arquitectura', zona:'Zona Sur', loc:'Adrogué', rubro:'arquitectura', phone:'1142932578', email:'', web:'', dir:'Bouchard 1325', notes:'Estudio de arquitectura.' },
+      { name:'Fernando Giorgi — Arquitectura', zona:'Zona Sur', loc:'Adrogué', rubro:'arquitectura', phone:'1142941857', email:'', web:'', dir:'Quintana 739', notes:'Arquitectura y planos.' },
+      { name:'OS Arquitectura', zona:'Zona Sur', loc:'Adrogué', rubro:'arquitectura', phone:'1142938311', email:'', web:'', dir:'Obligado 1322', notes:'Estudio en Adrogué.' },
+      { name:'Ramos Aliro E. — Arquitecto', zona:'Zona Sur', loc:'Burzaco', rubro:'arquitectura', phone:'1142146503', email:'', web:'', dir:'Azopardo 1440', notes:'Diseños y planos.' },
+      { name:'Ferreri Semino Blanco Arquitectos', zona:'Zona Sur', loc:'Burzaco', rubro:'arquitectura', phone:'1142381270', email:'', web:'', dir:'25 de Mayo 1000', notes:'Estudio de arquitectura.' },
+      { name:'2 Arquitectos', zona:'Zona Sur', loc:'Monte Grande', rubro:'arquitectura', phone:'1142901918', email:'', web:'', dir:'Máximo Paz 11 Local 60', notes:'Proyecto y dirección de obras.' },
+      { name:'AR Estudio de Arquitectura', zona:'Zona Sur', loc:'Monte Grande', rubro:'arquitectura', phone:'1142962885', email:'', web:'', dir:'Las Heras 380', notes:'Estudio en Monte Grande.' },
+      { name:'Rodolfo Casaza — Arquitecto', zona:'Zona Sur', loc:'Monte Grande', rubro:'arquitectura', phone:'1142812115', email:'', web:'', dir:'S. T. de Santamarina 439', notes:'Estudio individual.' },
+      { name:'Sandra Insaurralde — Arquitecta', zona:'Zona Sur', loc:'Monte Grande', rubro:'arquitectura', phone:'1163704431', email:'', web:'', dir:'Dr. Rotta 252', notes:'Celular de contacto.' },
+      { name:'Silvia V. Lonfa', zona:'Zona Sur', loc:'Monte Grande', rubro:'arquitectura', phone:'1142902326', email:'', web:'', dir:'Edison 511', notes:'Proyecto, dirección y construcción.' },
+      { name:'Fernando Guirasola — Arquitecto', zona:'Zona Sur', loc:'Monte Grande', rubro:'arquitectura', phone:'1142961272', email:'', web:'', dir:'Las Heras 563', notes:'Estudio individual.' },
+      { name:'Adur Arquitectura & Diseño', zona:'Zona Sur', loc:'Lanús', rubro:'arquitectura', phone:'1142417707', email:'', web:'', dir:'Pte. Urquiza 3211, Lanús Oeste', notes:'Arquitectura y diseño.' },
+      { name:'Ibarrondo Estudio de Arquitectura', zona:'Zona Sur', loc:'Lanús', rubro:'arquitectura', phone:'1142284993', email:'', web:'', dir:'Av. R. de Escalada 3088 Dpto B', notes:'Estudio en Lanús Oeste.' },
+      { name:'Walter Luchetti — Arquitecto', zona:'Zona Sur', loc:'Lanús', rubro:'arquitectura', phone:'1142093347', email:'', web:'', dir:'Brasil 1060', notes:'Estudio individual.' },
+      { name:'Rafael Daloia — Arquitecto', zona:'Zona Sur', loc:'Lanús', rubro:'arquitectura', phone:'1142467220', email:'', web:'', dir:'Av. Centenario Uruguayo 2209, Lanús Este', notes:'Estudio individual.' },
+      { name:'Damián Bojko — Arquitecto', zona:'Zona Sur', loc:'Lanús', rubro:'arquitectura', phone:'1142255660', email:'', web:'', dir:'Udaondo 2789, Lanús Oeste', notes:'Proyectos, ampliaciones y planos. También diseño gráfico.' },
+      { name:'LAM Mateos Estudio', zona:'Zona Sur', loc:'Lanús', rubro:'arquitectura', phone:'1142494251', email:'', web:'', dir:'J. B. Justo 2644, Lanús Este', notes:'Proyecto, dirección y ejecución.' },
+      { name:'Estudio 3 Construcciones', zona:'Zona Sur', loc:'Lanús', rubro:'construccion', phone:'1149823101', email:'', web:'', dir:'Resistencia 1357, Lanús Oeste', notes:'Cel. 11 15-4991-7669. Viviendas y edificios.' },
+      { name:'Pusterla Stella M.', zona:'Zona Sur', loc:'Avellaneda', rubro:'arquitectura', phone:'1142012700', email:'', web:'', dir:'Laprida 165', notes:'Teléfono de guía. Verificar.' },
+      { name:'Forgione Vicente', zona:'Zona Sur', loc:'Avellaneda', rubro:'arquitectura', phone:'1142049300', email:'', web:'', dir:'Florencio Varela 1640, Gerli', notes:'Estudio en Gerli. Verificar dígitos.' },
+      { name:'Estudio G. G. Capellotti', zona:'Zona Sur', loc:'Avellaneda', rubro:'arquitectura', phone:'1142045300', email:'', web:'', dir:'General Acha 653, Sarandí', notes:'Estudio en Sarandí. Verificar dígitos.' },
+      { name:'UNDAV — Arquitectura y Diseño', zona:'Zona Sur', loc:'Avellaneda', rubro:'educacion', phone:'1142292400', email:'arquitecturaydiseno@undav.edu.ar', web:'https://www.undav.edu.ar/', dir:'España 350', notes:'También 4222-9640. Carreras de arquitectura y diseño industrial.' },
+      { name:'Taller Metalúrgico MRK', zona:'Zona Sur', loc:'Avellaneda', rubro:'metalurgica', phone:'1142181807', email:'', web:'', dir:'Tuyú 1324', notes:'Tornería y mecánica de precisión. Piezas y repuestos.' },
+      { name:'Precimec — Mecanizados CNC', zona:'Zona Sur', loc:'Quilmes', rubro:'metalurgica', phone:'1142540088', email:'', web:'', dir:'San Juan 1773', notes:'Mecanizado CNC de precisión.' },
+      { name:'Industria Metalúrgica Federico Boero', zona:'Zona Sur', loc:'Quilmes', rubro:'metalurgica', phone:'1142088332', email:'', web:'', dir:'Isleta 1878', notes:'Taller metalúrgico.' },
+      { name:'Indusquil Tornería', zona:'Zona Sur', loc:'Quilmes', rubro:'metalurgica', phone:'1142510317', email:'', web:'', dir:'J. Blanco 71, Quilmes Oeste', notes:'También 4137-7264. Tornería CNC, +30 años.' },
+      { name:'Braccmet S.R.L.', zona:'Zona Sur', loc:'Quilmes', rubro:'metalurgica', phone:'1142502281', email:'', web:'', dir:'San Mauro Castelverde 2775, Quilmes Oeste', notes:'También 4115-2493. Mecanizado CNC / precisión.' },
+      { name:'Plaul', zona:'Zona Sur', loc:'Lanús', rubro:'metalurgica', phone:'1173573317', email:'web@plaul.com.ar', web:'', dir:'Yatay 3321, Lanús Oeste', notes:'Metalmecánica, calderería y automatización. Desde 1960.' },
+      { name:'Serrano Metal', zona:'Zona Sur', loc:'Quilmes', rubro:'metalurgica', phone:'1149377224', email:'info@serranometal.com.ar', web:'https://serranometal.com.ar/', dir:'Laprida 1651, Quilmes Oeste', notes:'Estructuras metálicas. WhatsApp el mismo número.' },
+      { name:'Lasertec Ingeniería', zona:'Zona Sur', loc:'Avellaneda', rubro:'metalurgica', phone:'1142094445', email:'', web:'https://www.lasertec.com.ar', dir:'Güifra 1320', notes:'Corte láser / ingeniería.' },
+      { name:'DIFRA CNC', zona:'Zona Sur', loc:'Lomas de Zamora', rubro:'metalurgica', phone:'1142823855', email:'', web:'https://www.difracnc.com', dir:'Presidente Perón 1265', notes:'Pantógrafos y CNC.' },
+      { name:'Daycon Construcciones Civiles', zona:'Zona Sur', loc:'Quilmes', rubro:'construccion', phone:'1142543181', email:'', web:'', dir:'Tucumán 561', notes:'Construcciones civiles.' },
+      { name:'F.E.L. Construcciones', zona:'Zona Sur', loc:'Quilmes', rubro:'construccion', phone:'1142532470', email:'', web:'', dir:'Alem 620', notes:'Constructora.' },
+      { name:'Constructora Bernal', zona:'Zona Sur', loc:'Quilmes', rubro:'construccion', phone:'1142523960', email:'', web:'', dir:'José Evaristo Uriburu 433', notes:'Constructora.' },
+      { name:'Inmobiliaria Respano', zona:'Zona Sur', loc:'Quilmes', rubro:'inmobiliaria', phone:'1169112077', email:'inmobiliariarespano@hotmail.com.ar', web:'https://inmobiliariarespano.com/', dir:'Lavalle 181', notes:'También 4253-8349. Desarrollan edificios propios: maquetas.' },
+      { name:'Amaral Bienes Raíces', zona:'Zona Sur', loc:'Quilmes', rubro:'inmobiliaria', phone:'1142537857', email:'amaralbienesraices@yahoo.com.ar', web:'', dir:'Alvear 639', notes:'Cel. 11 15-2391-3379.' },
+      { name:'Andrea Formica Bienes Raíces', zona:'Zona Sur', loc:'Quilmes', rubro:'inmobiliaria', phone:'1142578974', email:'aformica.bienesraices@gmail.com', web:'', dir:'José de San Martín 362 PB', notes:'También 4224-7766.' },
+      { name:'Inmobiliaria Alsina', zona:'Zona Sur', loc:'Quilmes', rubro:'inmobiliaria', phone:'1142548838', email:'', web:'', dir:'Alsina 104', notes:'Inmobiliaria en Quilmes centro.' },
+      { name:'Inmobiliaria Occhipinti', zona:'Zona Sur', loc:'Quilmes', rubro:'inmobiliaria', phone:'1142540475', email:'', web:'', dir:'Carlos Pellegrini 383', notes:'También 11 4184-4089.' },
+      { name:'Banfield Propiedades', zona:'Zona Sur', loc:'Banfield', rubro:'inmobiliaria', phone:'1142423322', email:'', web:'', dir:'Av. Maipú 604', notes:'Inmobiliaria.' },
+      { name:'Cabrera & Luraschi', zona:'Zona Sur', loc:'Banfield', rubro:'inmobiliaria', phone:'1142487990', email:'', web:'', dir:'Av. Alsina 229', notes:'Inmobiliaria.' },
+      { name:'Dascolias Propiedades', zona:'Zona Sur', loc:'Banfield', rubro:'inmobiliaria', phone:'1142421999', email:'', web:'', dir:'Uriarte 998', notes:'Inmobiliaria.' },
+      { name:'Hernando Propiedades', zona:'Zona Sur', loc:'Banfield', rubro:'inmobiliaria', phone:'1142029400', email:'', web:'', dir:'Av. H. Yrigoyen 7389', notes:'Inmobiliaria.' },
+      { name:'Albisu Inmobiliaria', zona:'Zona Sur', loc:'Lomas de Zamora', rubro:'inmobiliaria', phone:'1142453229', email:'', web:'', dir:'Colombres 633', notes:'Inmobiliaria.' },
+      { name:'Daniel Cendra Negocios Inmobiliarios', zona:'Zona Sur', loc:'Lomas de Zamora', rubro:'inmobiliaria', phone:'1142435757', email:'', web:'', dir:'Boedo 596', notes:'Inmobiliaria.' },
+      { name:'Fabian Tortello Inmobiliaria', zona:'Zona Sur', loc:'Lomas de Zamora', rubro:'inmobiliaria', phone:'1142440133', email:'', web:'', dir:'Sarmiento 165', notes:'Inmobiliaria.' },
+      { name:'Selischenko Propiedades', zona:'Zona Sur', loc:'Temperley', rubro:'inmobiliaria', phone:'1142446666', email:'', web:'', dir:'Av. Alte. Brown 3075', notes:'Inmobiliaria.' }
     ];
 
     const PITCH = {
-      arquitectura: 'Vi que trabajan proyectos de arquitectura. Desde DyL 3D Prints podemos darles una mano con:\n• Maquetas de presentación (escala, color, terreno)\n• Detalles constructivos y piezas para obra\n• Prototipos de mobiliario o carpintería\n• Entrega rápida (1 a 5 días) en Zona Oeste / AMBA\n\nSi tienen un plano o un archivo, les armo un presupuesto sin cargo.',
-      construccion: 'Trabajamos impresión 3D para constructoras: plantillas, piezas de replanteo, detalles, señalética de obra y prototipos de elementos a medida.\nSin mínimos, sin moldes, en días.\n\n¿Les sirve que les arme una propuesta concreta para un trabajo actual?',
-      diseno: 'Para diseño industrial la impresión 3D recorta semanas de ida y vuelta.\nHacemos prototipos funcionales, iteraciones rápidas y piezas de validación (también multi-color).\n\nSi tienen un STL/OBJ o incluso un boceto, les cotizo en el día.',
-      metalurgica: 'Complementamos al taller: jigs, utillajes, protectores, prototipos y piezas puente mientras llega el mecanizado o el importado.\nMateriales técnicos y entrega local en Zona Oeste.\n\n¿Tienen alguna pieza que hoy les frena una máquina o un pedido?',
-      ingenieria: 'Servicio de prototipado e impresión 3D para estudios técnicos: validación de geometrías, piezas de ensayo y series cortas.\nPresupuesto en el día, entrega 1–5 días.',
-      inmobiliaria: 'Maquetas de emprendimientos y unidades para sala de ventas o reuniones con inversores. Escala, color y detalles de entorno.\nPodemos cotizar a partir de planos.',
-      publicidad: 'Props, letras, displays, piezas de stand y merchandising 3D a medida. Ideal cuando hay que llegar a un evento y no hay tiempo de molde.\n¿Tienen algo próximo?',
-      joyeria: 'Prototipos, masters y piezas de prueba antes de fundir. Iteramos rápido y barato comparado con un master tradicional.',
-      salud: 'Modelos anatómicos, guías y piezas de apoyo (no dispositivos médicos certificados). Útil para explicación al paciente o planificación.',
+      arquitectura: 'Vi que trabajan proyectos de arquitectura. Desde DyL 3D Prints podemos darles una mano con:\n• Maquetas de presentación (escala, color, terreno)\n• Detalles constructivos y piezas para obra\n• Prototipos de mobiliario\n• Entrega 1 a 5 días en CABA y GBA\n\nSi tienen un plano o un archivo, les armo un presupuesto sin cargo.',
+      construccion: 'Trabajamos impresión 3D para constructoras: plantillas, piezas de replanteo, detalles y prototipos a medida.\nSin mínimos ni moldes, en días.\n\n¿Les sirve una propuesta para un trabajo actual?',
+      diseno: 'Para diseño industrial la impresión 3D recorta semanas de ida y vuelta.\nPrototipos funcionales, iteraciones rápidas y piezas de validación (también multi-color).\n\nSi tienen un STL/OBJ o un boceto, les cotizo en el día.',
+      metalurgica: 'Complementamos al taller: jigs, utillajes, protectores, prototipos y piezas puente mientras llega el mecanizado o el importado.\nMateriales técnicos y entrega en AMBA.\n\n¿Tienen alguna pieza que hoy les frena una máquina o un pedido?',
+      inmobiliaria: 'Maquetas de emprendimientos y unidades para sala de ventas o reuniones con inversores. Escala, color y entorno.\nCotizamos a partir de planos.',
       educacion: 'Piezas didácticas, prototipos para cátedra y apoyo a trabajos prácticos. Podemos coordinar precios institucionales.',
-      automotriz: 'Repuestos que no se consiguen, adaptadores, protectores y utillajes de taller. A partir de muestra, foto o archivo.',
+      joyeria: 'Prototipos, masters y piezas de prueba antes de fundir. Iteramos rápido comparado con un master tradicional.',
       otro: 'Servicio de impresión 3D a medida: prototipos, piezas funcionales, series cortas y diseño si no tienen el archivo.\nEntrega 1–5 días en CABA y GBA.'
     };
 
@@ -287,118 +310,153 @@
       wa: '5491153195024',
       ig: '@dyl3dprints',
       mail: 'hola@dyl3dprints.com',
-      zona: 'Zona Oeste · CABA y GBA'
+      zona: 'CABA y Zona Sur · AMBA'
     };
 
+    let zona = 'todas';
     let filter = 'todos';
-    let editingId = null;
 
-    function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+    function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
     function getCfg(){ try { return {...defaultCfg, ...JSON.parse(localStorage.getItem('dyl_cfg')||'{}')}; } catch { return {...defaultCfg}; } }
-    function getClients(){
-      try {
-        const raw = localStorage.getItem('dyl_clients');
-        if (raw) return JSON.parse(raw);
-      } catch {}
-      const seeded = SEEDS.map(s => ({...s, id: uid(), created: Date.now()}));
-      localStorage.setItem('dyl_clients', JSON.stringify(seeded));
-      return seeded;
-    }
+    function getClients(){ try { return JSON.parse(localStorage.getItem('dyl_clients')||'[]'); } catch { return []; } }
     function setClients(list){ localStorage.setItem('dyl_clients', JSON.stringify(list)); }
-
-    function fillSelects(){
-      const zona = document.getElementById('zona');
-      zona.innerHTML = Object.keys(ZONAS).map(z => `<option>${z}</option>`).join('');
-      fillLocalidades();
-      const rubroOpts = RUBROS.map(r => `<option value="${r.id}">${r.label}</option>`).join('');
-      document.getElementById('rubro').innerHTML = rubroOpts;
-      document.getElementById('cRubro').innerHTML = rubroOpts;
-      document.getElementById('propRubro').innerHTML = rubroOpts;
-    }
-    function fillLocalidades(){
-      const z = document.getElementById('zona').value;
-      document.getElementById('localidad').innerHTML = (ZONAS[z]||[]).map(l => `<option>${l}</option>`).join('');
-    }
-    function currentLoc(){
-      return (document.getElementById('localidadCustom').value.trim() || document.getElementById('localidad').value);
-    }
-    function currentRubro(){
-      return RUBROS.find(r => r.id === document.getElementById('rubro').value) || RUBROS[0];
-    }
-    function openSearch(type){
-      const loc = currentLoc();
-      const r = currentRubro();
-      const q = `${r.q} ${loc} Buenos Aires`;
-      const maps = `https://www.google.com/maps/search/${encodeURIComponent(q)}`;
-      const g = `https://www.google.com/search?q=${encodeURIComponent(q + ' teléfono whatsapp')}`;
-      if (type === 'maps' || type === 'both') window.open(maps, '_blank');
-      if (type === 'google' || type === 'both') window.open(g, '_blank');
-    }
-
-    function showTab(t){
-      ['buscar','cartera','propuesta','config'].forEach(id => {
-        document.getElementById('tab-'+id).classList.toggle('hidden', id !== t);
-      });
-      document.querySelectorAll('.navbtn').forEach(b => {
-        b.classList.toggle('text-sky-300', b.dataset.t === t);
-        b.classList.toggle('text-slate-400', b.dataset.t !== t);
-      });
-      if (t === 'cartera') renderCartera();
-      if (t === 'propuesta') { fillPropClients(); buildProposal(); }
-      if (t === 'config') loadCfgForm();
-    }
-
-    function statusColor(s){
-      return {prospecto:'text-sky-300', contactado:'text-amber-300', propuesta:'text-violet-300', cliente:'text-emerald-300', descartado:'text-slate-500'}[s] || 'text-slate-400';
-    }
     function rubroLabel(id){ return (RUBROS.find(r=>r.id===id)||{}).label || id; }
     function cleanPhone(p){
       if (!p) return '';
       let n = String(p).replace(/\D/g,'');
       if (n.startsWith('00')) n = n.slice(2);
       if (n.startsWith('54')) return n;
-      if (n.startsWith('9') && n.length >= 10) return '54'+n;
-      if (n.startsWith('11') || n.startsWith('15')) return '549'+n.replace(/^15/,'11');
-      if (n.length === 10) return '54'+n;
+      if (n.startsWith('9') && n.length>=10) return '54'+n;
+      if (n.startsWith('15') && n.length>=10) return '549'+n.slice(2);
+      if (n.startsWith('11')) return '54'+n;
+      if (n.length===10) return '54'+n;
       return n;
     }
+    function statusColor(s){
+      return {prospecto:'text-sky-300', contactado:'text-amber-300', propuesta:'text-violet-300', cliente:'text-emerald-300', descartado:'text-slate-500'}[s] || 'text-slate-400';
+    }
 
-    function renderSugeridos(){
-      document.getElementById('sugeridos').innerHTML = SEEDS.map(s => `
-        <div class="rounded-xl border border-sky-500/10 p-3 flex justify-between gap-3">
-          <div>
-            <p class="text-sm font-medium">${s.name}</p>
-            <p class="text-xs text-slate-400">${rubroLabel(s.rubro)} · ${s.loc}</p>
+    function fillFilters(){
+      const locs = ['Todas las localidades', ...[...new Set(DIR.map(d=>d.loc))].sort()];
+      document.getElementById('fLoc').innerHTML = locs.map((l,i)=>`<option value="${i===0?'':l}">${l}</option>`).join('');
+      document.getElementById('fRubro').innerHTML = '<option value="">Todos los rubros</option>' + RUBROS.map(r=>`<option value="${r.id}">${r.label}</option>`).join('');
+      const rubroOpts = RUBROS.map(r=>`<option value="${r.id}">${r.label}</option>`).join('');
+      document.getElementById('cRubro').innerHTML = rubroOpts;
+      document.getElementById('propRubro').innerHTML = rubroOpts;
+    }
+
+    function setZona(z){
+      zona = z;
+      document.querySelectorAll('.zchip').forEach(b=>{
+        const on = b.dataset.z===z;
+        b.classList.toggle('bg-sky-500', on);
+        b.classList.toggle('text-ink', on);
+      });
+      renderDir();
+    }
+
+    function filteredDir(){
+      const loc = document.getElementById('fLoc').value;
+      const rubro = document.getElementById('fRubro').value;
+      const q = (document.getElementById('fQ').value||'').toLowerCase();
+      return DIR.filter(d => {
+        if (zona!=='todas' && d.zona!==zona) return false;
+        if (loc && d.loc!==loc) return false;
+        if (rubro && d.rubro!==rubro) return false;
+        if (q && ![d.name,d.loc,d.phone,d.email,d.dir,d.notes].join(' ').toLowerCase().includes(q)) return false;
+        return true;
+      });
+    }
+
+    function contactBtns(d){
+      const ph = cleanPhone(d.phone);
+      let html = '';
+      if (ph) html += `<a class="text-xs px-3 py-1.5 rounded-full bg-emerald-500/15 text-emerald-300" href="https://wa.me/${ph}">WhatsApp</a>`;
+      if (d.phone) html += `<a class="text-xs px-3 py-1.5 rounded-full chip" href="tel:${d.phone}">Llamar</a>`;
+      if (d.email) html += `<a class="text-xs px-3 py-1.5 rounded-full chip" href="mailto:${d.email}">Mail</a>`;
+      if (d.web) html += `<a class="text-xs px-3 py-1.5 rounded-full chip" href="${d.web}" target="_blank">Web</a>`;
+      return html;
+    }
+
+    function renderDir(){
+      const list = filteredDir();
+      document.getElementById('dirCount').textContent = `${list.length} comercios`;
+      document.getElementById('dirList').innerHTML = list.map((d)=>`
+        <article class="card rounded-2xl p-4">
+          <div class="flex justify-between gap-2">
+            <div>
+              <p class="font-medium">${d.name}</p>
+              <p class="text-xs text-slate-400">${rubroLabel(d.rubro)} · ${d.loc} · ${d.zona}</p>
+            </div>
           </div>
-          <button onclick='addSeed(${JSON.stringify(s).replace(/'/g,"\\'")})' class="text-xs text-sky-300 shrink-0">+ Cartera</button>
-        </div>`).join('');
-    }
-    function addSeed(s){
-      const list = getClients();
-      if (list.some(c => c.name === s.name)) { alert('Ya está en la cartera'); return; }
-      list.unshift({...s, id: uid(), created: Date.now()});
-      setClients(list);
-      showTab('cartera');
+          ${d.dir ? `<p class="text-xs text-slate-500 mt-1">${d.dir}</p>` : ''}
+          <div class="mt-2 space-y-0.5 text-sm">
+            ${d.phone ? `<p>Tel. ${d.phone}</p>` : '<p class="text-slate-500 text-xs">Sin teléfono publicado</p>'}
+            ${d.email ? `<p class="text-xs text-sky-300">${d.email}</p>` : ''}
+          </div>
+          ${d.notes ? `<p class="text-xs text-slate-400 mt-2">${d.notes}</p>` : ''}
+          <div class="flex flex-wrap gap-2 mt-3">
+            ${contactBtns(d)}
+            <button class="text-xs px-3 py-1.5 rounded-full bg-sky-500 text-ink font-medium" onclick="fromDirToProposal(${DIR.indexOf(d)})">Propuesta</button>
+            <button class="text-xs px-3 py-1.5 rounded-full chip" onclick="saveFromDir(${DIR.indexOf(d)})">A cartera</button>
+          </div>
+        </article>`).join('') || '<p class="text-sm text-slate-500 py-8 text-center">No hay resultados con esos filtros.</p>';
     }
 
-    function setFilter(f){ filter = f; renderCartera(); }
+    function saveFromDir(i){
+      const d = DIR[i];
+      const list = getClients();
+      if (list.some(c => c.name===d.name && c.phone===d.phone)) { alert('Ya está en la cartera'); return; }
+      list.unshift({ id:uid(), name:d.name, rubro:d.rubro, loc:d.loc, phone:d.phone, email:d.email, web:d.web, dir:d.dir, notes:d.notes, status:'prospecto', created:Date.now() });
+      setClients(list);
+      alert('Guardado en cartera');
+    }
+    function fromDirToProposal(i){
+      const d = DIR[i];
+      const list = getClients();
+      if (!list.some(c => c.name===d.name && c.phone===d.phone)) {
+        list.unshift({ id:uid(), name:d.name, rubro:d.rubro, loc:d.loc, phone:d.phone, email:d.email, web:d.web, dir:d.dir, notes:d.notes, status:'prospecto', created:Date.now() });
+        setClients(list);
+      }
+      showTab('propuesta');
+      document.getElementById('propNombre').value = d.name;
+      document.getElementById('propRubro').value = d.rubro;
+      document.getElementById('propPhone').value = cleanPhone(d.phone);
+      const saved = getClients().find(c => c.name===d.name);
+      if (saved) document.getElementById('propClient').value = saved.id;
+      buildProposal();
+    }
+
+    function showTab(t){
+      ['directorio','cartera','propuesta','config'].forEach(id=>{
+        document.getElementById('tab-'+id).classList.toggle('hidden', id!==t);
+      });
+      document.querySelectorAll('.navbtn').forEach(b=>{
+        b.classList.toggle('text-sky-300', b.dataset.t===t);
+        b.classList.toggle('text-slate-400', b.dataset.t!==t);
+      });
+      if (t==='cartera') renderCartera();
+      if (t==='propuesta'){ fillPropClients(); buildProposal(); }
+      if (t==='config') loadCfgForm();
+    }
+
+    function setFilter(f){ filter=f; renderCartera(); }
     function renderCartera(){
       const q = (document.getElementById('q').value||'').toLowerCase();
       let list = getClients();
-      if (filter !== 'todos') list = list.filter(c => c.status === filter);
+      if (filter!=='todos') list = list.filter(c=>c.status===filter);
       if (q) list = list.filter(c => [c.name,c.loc,c.rubro,c.notes,c.phone].join(' ').toLowerCase().includes(q));
       document.getElementById('carteraCount').textContent = `${list.length} contactos`;
-      document.querySelectorAll('.filt').forEach(b => {
-        b.classList.toggle('bg-sky-500', b.dataset.f === filter);
-        b.classList.toggle('text-ink', b.dataset.f === filter);
+      document.querySelectorAll('.filt').forEach(b=>{
+        b.classList.toggle('bg-sky-500', b.dataset.f===filter);
+        b.classList.toggle('text-ink', b.dataset.f===filter);
       });
       if (!list.length) {
-        document.getElementById('carteraList').innerHTML = '<p class="text-sm text-slate-500 py-8 text-center">Nada acá todavía. Buscá en Maps y agregá el primer contacto.</p>';
+        document.getElementById('carteraList').innerHTML = '<p class="text-sm text-slate-500 py-8 text-center">Todavía no guardaste nadie. En Directorio tocá “A cartera”.</p>';
         return;
       }
-      document.getElementById('carteraList').innerHTML = list.map(c => {
-        const ph = cleanPhone(c.phone);
-        return `<article class="card rounded-2xl p-4">
+      document.getElementById('carteraList').innerHTML = list.map(c=>`
+        <article class="card rounded-2xl p-4">
           <div class="flex justify-between gap-2">
             <div>
               <p class="font-medium">${c.name}</p>
@@ -407,27 +465,24 @@
             <span class="text-[11px] ${statusColor(c.status)}">${c.status}</span>
           </div>
           ${c.dir ? `<p class="text-xs text-slate-500 mt-1">${c.dir}</p>` : ''}
+          ${c.phone ? `<p class="text-sm mt-1">${c.phone}</p>` : ''}
+          ${c.email ? `<p class="text-xs text-sky-300">${c.email}</p>` : ''}
           ${c.notes ? `<p class="text-xs text-slate-400 mt-2">${c.notes}</p>` : ''}
           <div class="flex flex-wrap gap-2 mt-3">
-            ${ph ? `<a class="text-xs px-3 py-1.5 rounded-full bg-emerald-500/15 text-emerald-300" href="https://wa.me/${ph}">WhatsApp</a>` : ''}
-            ${c.phone ? `<a class="text-xs px-3 py-1.5 rounded-full chip" href="tel:${c.phone}">Llamar</a>` : ''}
-            ${c.email ? `<a class="text-xs px-3 py-1.5 rounded-full chip" href="mailto:${c.email}">Mail</a>` : ''}
-            ${c.web ? `<a class="text-xs px-3 py-1.5 rounded-full chip" href="${c.web.startsWith('http')?c.web:'https://'+c.web}" target="_blank">Web</a>` : ''}
+            ${contactBtns(c)}
             <button class="text-xs px-3 py-1.5 rounded-full bg-sky-500 text-ink font-medium" onclick="goProposal('${c.id}')">Propuesta</button>
             <button class="text-xs px-3 py-1.5 rounded-full chip" onclick="openClientModal('${c.id}')">Editar</button>
           </div>
-        </article>`;
-      }).join('');
+        </article>`).join('');
     }
 
     function openClientModal(id){
-      editingId = id || null;
-      const c = id ? getClients().find(x => x.id === id) : null;
+      const c = id ? getClients().find(x=>x.id===id) : null;
       document.getElementById('modalTitle').textContent = c ? 'Editar cliente' : 'Nuevo cliente';
       document.getElementById('cId').value = c?.id || '';
       document.getElementById('cName').value = c?.name || '';
       document.getElementById('cRubro').value = c?.rubro || 'arquitectura';
-      document.getElementById('cLoc').value = c?.loc || currentLoc();
+      document.getElementById('cLoc').value = c?.loc || '';
       document.getElementById('cPhone').value = c?.phone || '';
       document.getElementById('cEmail').value = c?.email || '';
       document.getElementById('cWeb').value = c?.web || '';
@@ -454,30 +509,30 @@
         created: Date.now()
       };
       let list = getClients();
-      const i = list.findIndex(x => x.id === item.id);
-      if (i >= 0) list[i] = {...list[i], ...item};
+      const i = list.findIndex(x=>x.id===item.id);
+      if (i>=0) list[i] = {...list[i], ...item};
       else list.unshift(item);
       setClients(list);
       closeModal();
-      renderAll();
+      renderCartera();
+      fillPropClients();
     }
     function deleteClient(){
       const id = document.getElementById('cId').value;
       if (!id) return closeModal();
       if (!confirm('¿Eliminar este contacto?')) return;
-      setClients(getClients().filter(c => c.id !== id));
+      setClients(getClients().filter(c=>c.id!==id));
       closeModal();
-      renderAll();
+      renderCartera();
+      fillPropClients();
     }
 
     function fillPropClients(){
-      const sel = document.getElementById('propClient');
       const list = getClients();
-      sel.innerHTML = '<option value="">— elegir de la cartera —</option>' + list.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      document.getElementById('propClient').innerHTML = '<option value="">— elegir de la cartera —</option>' + list.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
     }
     function fillFromClient(){
-      const id = document.getElementById('propClient').value;
-      const c = getClients().find(x => x.id === id);
+      const c = getClients().find(x=>x.id===document.getElementById('propClient').value);
       if (!c) return;
       document.getElementById('propNombre').value = c.name;
       document.getElementById('propRubro').value = c.rubro;
@@ -494,8 +549,8 @@
       const nombre = document.getElementById('propNombre').value.trim() || 'equipo';
       const rubro = document.getElementById('propRubro').value;
       const body = PITCH[rubro] || PITCH.otro;
-      const msg = `Hola, ¿qué tal? Soy de ${cfg.name}.\n\n${body}\n\nQuedo atento por acá.\n${cfg.name}\nWhatsApp ${cfg.wa}\n${cfg.ig} · ${cfg.mail}\n${cfg.zona}`;
-      document.getElementById('propMsg').value = msg.replace('Hola, ¿qué tal?', `Hola ${nombre}, ¿qué tal?`);
+      document.getElementById('propMsg').value =
+        `Hola ${nombre}, ¿qué tal? Soy de ${cfg.name}.\n\n${body}\n\nQuedo atento por acá.\n${cfg.name}\nWhatsApp ${cfg.wa}\n${cfg.ig} · ${cfg.mail}\n${cfg.zona}`;
     }
     function copyMsg(){
       const t = document.getElementById('propMsg').value;
@@ -504,18 +559,13 @@
     function sendWA(){
       const phone = cleanPhone(document.getElementById('propPhone').value);
       const msg = encodeURIComponent(document.getElementById('propMsg').value);
-      if (!phone) {
-        alert('Falta el WhatsApp del cliente. Se va a abrir WhatsApp para que elijas el chat.');
-        window.open('https://wa.me/?text='+msg, '_blank');
-        return;
-      }
       const id = document.getElementById('propClient').value;
       if (id) {
         const list = getClients();
-        const i = list.findIndex(c => c.id === id);
-        if (i>=0 && list[i].status === 'prospecto') { list[i].status = 'propuesta'; setClients(list); }
+        const i = list.findIndex(c=>c.id===id);
+        if (i>=0 && list[i].status==='prospecto') { list[i].status='propuesta'; setClients(list); }
       }
-      window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+      window.open(phone ? `https://wa.me/${phone}?text=${msg}` : `https://wa.me/?text=${msg}`, '_blank');
     }
     function printProposal(){
       const cfg = getCfg();
@@ -567,22 +617,15 @@
           const d = JSON.parse(r.result);
           if (d.cfg) localStorage.setItem('dyl_cfg', JSON.stringify(d.cfg));
           if (d.clients) setClients(d.clients);
-          renderAll();
+          renderCartera(); fillPropClients();
           alert('Importado');
         } catch { alert('Archivo inválido'); }
       };
       r.readAsText(f);
     }
 
-    function renderAll(){
-      renderSugeridos();
-      renderCartera();
-      fillPropClients();
-    }
-
-    fillSelects();
-    loadCfgForm();
-    renderAll();
+    fillFilters();
+    setZona('todas');
     document.getElementById('propRubro').addEventListener('change', buildProposal);
     document.getElementById('propNombre').addEventListener('input', buildProposal);
   </script>
